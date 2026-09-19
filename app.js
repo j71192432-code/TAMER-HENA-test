@@ -122,6 +122,28 @@ function transformSheetData(flatData) {
   return result.length > 0 ? result : null;
 }
 
+// الترتيب المطلوب لعرض الأقسام في المنيو
+const CATEGORY_ORDER = [
+  'قهوة ساخنة',
+  'الشاي والأعشاب',
+  'فرابيه وآيس كوفي',
+  'موهيتو فيزي',
+  'مشروبات غازيه',
+  'عصائر فريش',
+  'زبادي وميلك شيك',
+  'سموزي وكوكتيل'
+];
+
+// إعادة ترتيب الأقسام حسب الترتيب المحدد (يعمل مع البيانات المحلية والشيت)
+function orderCategories() {
+  if (!Array.isArray(categories)) return;
+  categories.sort((a, b) => {
+    const ia = CATEGORY_ORDER.indexOf(a.name);
+    const ib = CATEGORY_ORDER.indexOf(b.name);
+    return (ia === -1 ? CATEGORY_ORDER.length : ia) - (ib === -1 ? CATEGORY_ORDER.length : ib);
+  });
+}
+
 // 1. تحميل الذاكرة المحلية أولاً لفتح الموقع فوراً في 0 ميلي ثانية بدون أي تأخير
 function initMenu() {
   try {
@@ -135,6 +157,7 @@ function initMenu() {
   } catch (e) {}
 
   // رسم المنيو فوراً بدون انتظار الشبكة
+  orderCategories();
   renderAll();
   renderCatNav();
 
@@ -176,6 +199,7 @@ async function syncMenuFromSheets() {
         try {
           localStorage.setItem('tamr_henna_menu_cache', JSON.stringify(formattedData));
         } catch (e) {}
+        orderCategories();
         renderAll();
         renderCatNav();
       }
