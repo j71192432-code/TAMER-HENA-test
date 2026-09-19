@@ -1,0 +1,471 @@
+:root{
+  --bg:         #e0d6c8;
+  --card:       #e0d6c8;
+  --forest:     #2b4433;
+  --forest-deep:#1c3022;
+  --ink:        #2b2620;
+  --muted:      #9a8a6e;
+  --sep:        #b8b0a0;
+  --warm-dark:  #3a3228;
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Alexandria,Arial,sans-serif;
+  overflow-x:hidden;
+  min-height:100dvh;
+  touch-action:pan-y
+}
+
+/* Authentic Paper Grain overlay */
+.grain{
+  position:fixed;z-index:10;inset:0;pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  opacity: 0.12;
+  mix-blend-mode: multiply;
+}
+
+/* Botanical decorations */
+.botanical{position:fixed;z-index:1;color:var(--forest);opacity:.09;font-family:serif;font-size:140px;pointer-events:none}
+.b1{left:-45px;top:340px;transform:rotate(-30deg)}
+.b2{right:-38px;bottom:36px;transform:rotate(145deg)}
+
+main{max-width:720px;margin:auto;position:relative;z-index:2}
+
+/* ── Hero Header ── */
+.hero-header{
+  position:relative;isolation:isolate;
+  overflow:hidden;
+  min-height:300px;text-align:center;padding:0
+}
+.hero-video,.hero-shade{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero-video{z-index:-2;object-fit:cover}
+.hero-shade{z-index:-1;background:rgba(232,227,214,.12)}
+
+/* ── Mobile: show full video without cropping ── */
+@media(max-width:699px){
+  .hero-header{
+    min-height: unset;
+    overflow: visible;
+  }
+  .hero-video{
+    position: relative;
+    inset: unset;
+    width: 100%;
+    height: auto;
+    object-fit: unset;
+    display: block;
+    z-index: 0;
+  }
+  .hero-shade{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+}
+
+.hero-content{
+  height:100%;display:flex;flex-direction:column;
+  justify-content:flex-end;
+  padding:24px 24px 52px;
+  position:relative;z-index:1
+}
+h1{
+  margin:0;
+  font-family:'Aref Ruqaa Ink',serif;font-weight:700;
+  font-size:40px;line-height:1;
+  color:#fff;
+  text-shadow:0 2px 18px rgba(28,48,34,.85)
+}
+
+/* ── Category Nav Bar (sticky, after hero) ── */
+.cat-nav {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 10px 14px;
+  background: rgba(43, 68, 51, 0.95);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  scrollbar-width: none;
+}
+.cat-nav::-webkit-scrollbar { display: none; }
+
+.cat-btn {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1.5px solid rgba(255,255,255,0.5);
+  color: rgba(255,255,255,0.85);
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-family: Alexandria, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s, border-color 0.18s;
+  white-space: nowrap;
+}
+.cat-btn:hover,
+.cat-btn.active {
+  background: #fff;
+  color: var(--forest-deep);
+  border-color: #fff;
+}
+
+/* ── Menu Section ── */
+.menu-pages {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding-bottom: calc(40px + env(safe-area-inset-bottom));
+}
+
+.menu-page {
+  background-color: var(--card);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  color: var(--ink);
+}
+
+/* ── Page logo ── */
+.page-logo {
+  position: absolute;
+  top: clamp(4px, 2vw, 16px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  text-align: center;
+  pointer-events: none;
+  width: clamp(220px, 65vw, 400px);
+}
+.page-logo img {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 3px 12px rgba(0,0,0,0.28));
+}
+
+#page-1 {
+  background-image: url('media/menu-bg.png');
+  padding: clamp(150px, 42vw, 220px) 12px 24px;
+  position: relative;
+}
+
+/* ── Slider Viewport & Track ── */
+.slider-viewport {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  transition: height 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.slider-track {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+  align-items: flex-start;
+  will-change: transform;
+}
+
+.category-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  box-sizing: border-box;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  padding: 0 4px;
+}
+
+.category-slide.active-slide {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ── Slider Controls & Dots ── */
+.slider-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 8px 10px 0;
+  border-top: 1px dashed var(--sep);
+}
+
+.nav-arrow {
+  background: var(--forest);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s, transform 0.15s;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.nav-arrow:hover:not(:disabled) {
+  background: var(--forest-deep);
+  transform: scale(1.08);
+}
+
+.nav-arrow:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.dot-indicators {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.4;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s, transform 0.2s;
+}
+
+.dot.active {
+  background: var(--forest);
+  opacity: 1;
+  transform: scale(1.3);
+}
+
+/* ── Subtitle for categories ── */
+.cat-sub {
+  font-size: 10px;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+/* ── Coming Soon Card Design ── */
+.coming-soon-card {
+  text-align: center;
+  padding: 24px 14px;
+  background: rgba(255, 255, 255, 0.45);
+  border: 1.5px dashed var(--forest);
+  border-radius: 12px;
+  margin: 12px 0;
+}
+
+.cs-icon {
+  font-size: 32px;
+  margin-bottom: 6px;
+}
+
+.coming-soon-card h3 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  color: var(--forest);
+  font-weight: 700;
+}
+
+.coming-soon-card p {
+  margin: 0;
+  font-size: 11.5px;
+  color: var(--warm-dark);
+  line-height: 1.5;
+}
+
+/* ── Two-column flex layout inside each page ── */
+.menu-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+/* Right column: categories content */
+.col-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Left column: images */
+.col-images {
+  width: 32%;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Images in left column */
+.side-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+/* ── Category Block ── */
+.menu-category {
+  padding: 0 0 6px;
+  position: relative;
+}
+
+/* Category header */
+.cat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 4px;
+}
+.cat-header h2 {
+  margin: 0;
+  font-family: Alexandria, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--forest);
+  padding: 0;
+}
+.egp-label {
+  font-size: 9px;
+  font-weight: 800;
+  color: var(--forest);
+  letter-spacing: .05em;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.cat-body { display: block; }
+.items-col { width: 100%; }
+
+/* ── Drink rows: name … price ── */
+.drink-row {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  padding: 3px 0;
+  animation: rise .22s both;
+}
+
+.drink-name {
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 1.3;
+  color: var(--forest);
+  flex: 1;
+  min-width: 0;
+}
+.drink-note {
+  display: block;
+  color: var(--muted);
+  font-weight: 400;
+  font-size: 8.5px;
+  margin-top: 1px;
+}
+
+/* Dots spacer */
+.dots {
+  flex-shrink: 0;
+  width: 12px;
+  border-bottom: 1.5px dotted var(--muted);
+  margin-bottom: 2px;
+}
+
+.price {
+  color: var(--forest);
+  font-size: 12px;
+  font-weight: 700;
+  direction: ltr;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@keyframes rise { from { opacity:0; transform:translateY(4px) } to { opacity:1; transform:translateY(0) } }
+
+/* ── Responsive ── */
+
+/* Small phones (≤480px) */
+@media(max-width:480px){
+  .hero-header{ min-height: 42vw; }
+  h1{ font-size: clamp(22px, 7vw, 34px); }
+
+  .cat-nav{ padding: 7px 10px; gap: 6px; }
+  .cat-btn{ font-size: 11px; padding: 6px 11px; }
+
+  #page-1{ padding: clamp(110px, 38vw, 160px) 8px 20px; }
+
+  .menu-layout { gap: 8px; }
+  .col-images { width: 30%; }
+
+  .cat-header h2{ font-size: 12.5px; }
+  .egp-label{ font-size: 8.5px; }
+  .drink-name{ font-size: 11px; }
+  .drink-note{ font-size: 8px; }
+  .price{ font-size: 11px; }
+  .drink-row{ padding: 2.5px 0; gap: 3px; }
+  .dots{ width: 8px; }
+
+  .menu-pages{ gap: 14px; padding-bottom: calc(30px + env(safe-area-inset-bottom)); }
+  .page-logo{ width: clamp(180px, 60vw, 240px); }
+}
+
+/* Large phones / small tablets (481–699px) */
+@media(min-width:481px) and (max-width:699px){
+  .hero-header{ min-height: 38vw; }
+  h1{ font-size: clamp(28px, 6vw, 38px); }
+  .cat-btn{ font-size: 12px; padding: 7px 13px; }
+
+  #page-1{ padding: clamp(130px, 40vw, 190px) 10px 24px; }
+
+  .cat-header h2{ font-size: 14px; }
+  .drink-name{ font-size: 13px; }
+  .price{ font-size: 13px; }
+}
+
+/* Tablet & Desktop (700px+) */
+@media(min-width:700px){
+  body{
+    background: linear-gradient(90deg,#d5d0c2 0 12%,var(--bg) 12% 88%,#d5d0c2 88%)
+  }
+  .hero-header{ min-height: 320px; }
+  .hero-content{ padding-bottom: 60px; }
+  .menu-pages{
+    padding: 30px 24px 60px;
+    flex-direction: row;
+  }
+  .menu-page{
+    flex: 1;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+  #page-1 { padding-top: clamp(160px, 20vw, 220px); }
+
+  .cat-header h2{ font-size: 15px; }
+  .drink-name{ font-size: 13.5px; }
+  .price{ font-size: 13.5px; }
+  .drink-row{ padding: 4px 0; }
+  .col-images{ width: 32%; }
+}
+
+/* ── Global safety ── */
+img, video { max-width: 100%; height: auto; }
