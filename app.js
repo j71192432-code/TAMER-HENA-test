@@ -1,154 +1,24 @@
 // ==========================================
 // 1. إعدادات Google Sheets (جوجل شيت)
 // ==========================================
+// طريقة (أ): معرف شيت جوجل (Google Sheet ID) أو رابط الشيت العام
 const GOOGLE_SHEET_ID = '1O_Ye0YA-8F7WVRWJRi1ox8zFfJ5JI8tdJgxUjcUVbSY'; 
-const GOOGLE_SHEET_NAME = 'Sheet1'; 
+const GOOGLE_SHEET_NAME = 'Sheet1'; // اسم ورقة العمل (الافتراضي Sheet1)
+
+// طريقة (ب): رابط API لـ Google Sheets (مثل Google Apps Script / SheetDB / OpenSheet)
 const GOOGLE_SHEET_API_URL = ''; 
 
-// ترتيب الأقسام المطلوب
-const CATEGORY_PRIORITY = [
-  'الشاي والأعشاب',
-  'قهوة ساخنة',
-  'فرابيه وآيس كوفي',
-  'موهيتو فيزي',
-  'عصائر فريش',
-  'زبادي وميلك شيك',
-  'سموزي وكوكتيل',
-  'مشروبات غازيه',
-  'المأكولات - قريباً',
-  'المأكولات',
-  'الشيشة'
-];
-
-// الصور الجانبية الموزعة للأقسام
-const sideImagesMap = [
-  ['1.webp', '2.webp'],
-  ['3.webp', '4.webp'],
-  ['5.webp', '6.webp'],
-  ['7.webp', '8.webp'],
-  ['9.webp', '10.webp'],
-  ['11.webp', '12.webp'],
-  ['13.webp', '14.webp'],
-  ['15.webp'],
-  ['16.webp', '17.webp'],
-  ['18.webp']
-];
-
-// البيانات الافتراضية بالترتيب الجديد
+// البيانات الافتراضية للمنيو (تضمن العرض الفوري السريع 0ms دائماً)
 let categories = [
-  {
-    name: 'الشاي والأعشاب',
-    sub: 'مشروبات دافئة',
-    img: 'cat-tea.svg',
-    items: [
-      ['شاي أحمر', 20], ['شاي أخضر', 20], ['شاي باللبن', 30], ['شاي أحمد تي', 25],
-      ['شاي كرك', 40], ['شاي بالنكهات', 30], ['قرفة', 25], ['جنزبيل', 25],
-      ['شاي زارده بارد', 50], ['ينسون ونعناع وكركديه وليمون', 20], ['هوت سيدر', 45],
-      ['كوكتيل أعشاب صيدلية', 50], ['هوت سحلب مكسرات', 60], ['هوت سحلب فاكهة', 80],
-      ['قرفة باللبن', 45], ['شاي أحمر نعناع', 25]
-    ]
-  },
-  {
-    name: 'قهوة ساخنة',
-    sub: 'Hot Coffee & Hot Espresso',
-    img: 'cat-hotcoffee.svg',
-    items: [
-      ['قهوة تركي', 30, 'سنجل'], ['قهوة تركي', 40, 'دبل'], ['قهوة اسبشيل', 40, 'سنجل'],
-      ['قهوة اسبشيل', 50, 'دبل'], ['قهوة فرنساوي', 50], ['قهوة بندق', 55], ['قهوة نوتيلا', 60],
-      ['إسبريسو', 35, 'سنجل'], ['إسبريسو', 45, 'دبل'], ['ريستريتو', 35, 'سنجل'],
-      ['ريستريتو', 45, 'دبل'], ['ميكاتو', 40, 'سنجل'], ['ميكاتو', 50, 'دبل'],
-      ['أفوكاتو', 40, 'سنجل'], ['أفوكاتو', 50, 'دبل'], ['كون بانا', 40],
-      ['كورتادو', 50, 'كلاسيك أو موكا'], ['كابتشينو', 75], ['لاتيه', 65],
-      ['فلات وايت', 60], ['أمريكانو', 50, 'كلاسيك أو بلاك'], ['نسكافيه', 55, 'كلاسيك أو بلاك'],
-      ['هوت شوكليت', 70, 'دارك أو وايت'], ['هوت شوكليت مارشميلو', 80], ['هوت موكا', 60, 'دارك أو وايت']
-    ]
-  },
-  {
-    name: 'فرابيه وآيس كوفي',
-    sub: 'قهوة باردة ومشروبات مثلجة',
-    img: 'cat-frappuccino.svg',
-    items: [
-      ['فرابيه كراميل', 85], ['فرابتشينو كلاسيك', 75], ['فرابيه موكاتشينو', 85],
-      ['فرابيه لوتس ستروبري', 85], ['فانيلا فرابتشينو', 70], ['فرابيه بستشيو', 100],
-      ['آيس موكا', 80, 'وايت أو دارك'], ['آيس أمريكان', 55], ['آيس كوفي', 65],
-      ['آيس كراميل ميكاتو', 80], ['آيس سبينش لاتيه', 80], ['آيس ماتش لاتيه', 90],
-      ['ستروبري ماتش لاتيه', 95], ['ماتش بستشيو', 110], ['إيكا آيس كوفي', 85], ['آيس نيكتو أرش', 75]
-    ]
-  },
-  {
-    name: 'موهيتو فيزي',
-    sub: 'موهيتو وبوبا',
-    img: 'cat-mojito.svg',
-    items: [
-      ['موهيتو كلاسيك', 65], ['موهيتو فراولة، خوخ، كيوي', 70], ['موهيتو بلوبيري، باشون فروت', 70],
-      ['موهيتو أمري باشون', 70], ['موهيتو شيري بيري', 70], ['موهيتو ريد بول', 85],
-      ['هامر ريد بول', 95], ['بوبا ستروبري', 70], ['بوبا بلوبيري', 70],
-      ['بوبا باشون فروت', 70], ['بوبا كولا', 70], ['بوبا تفاح أخضر', 70],
-      ['ميلك تشيك بوبا', 85, 'ستروبري، بلوبيري، باشون فروت']
-    ]
-  },
-  {
-    name: 'عصائر فريش',
-    sub: 'عصائر طازجة',
-    img: 'cat-juice.svg',
-    items: [
-      ['مانجو فريش', 65], ['جوافة فريش', 55], ['فراولة فريش', 60], ['برتقال فريش', 60],
-      ['موز باللبن', 50], ['جوافة باللبن', 60], ['فراولة باللبن', 65], ['بلح موز باللبن', 65],
-      ['بلح باللبن', 50], ['ليمون فريش', 40], ['ليمون نعناع فريش', 45], ['برتقال بالجزر', 60],
-      ['بطيخ فريش', 60], ['بطيخ نعناع فريش', 65], ['جوافة نعناع فريش', 65], ['أناناس فريش', 70],
-      ['كيوي فريش', 80], ['أفوكادو فريش', 90]
-    ]
-  },
-  {
-    name: 'زبادي وميلك شيك',
-    sub: 'نكهات كريمية باردة',
-    img: 'cat-milkshake.svg',
-    items: [
-      ['زبادي كلاسيك', 60], ['زبادي عسل', 65], ['زبادي فواكه', 80],
-      ['زبادي', 75, 'مانجو، خوخ، فراولة، موز'], ['زبادي', 80, 'بلوبيري أو باشون فروت'],
-      ['ميلك تشيك كلاسيك', 75, 'فانيلا، شوكولاتة، كراميل، مانجو، فراولة، كيوي'],
-      ['ميلك تشيك ميجا', 80], ['ميلك تشيك كونو شيبس', 80],
-      ['ميلك تشيك', 85, 'أوريو، كيت كات، لوتس، نوتيلا، سنيكرز'],
-      ['ميلك تشيك بستشيو', 95], ['ميلك تشيز كيك', 135, 'شوكولاتة، كراميل، مانجو، فراولة']
-    ]
-  },
-  {
-    name: 'سموزي وكوكتيل',
-    sub: 'سموزي ومكس فريش',
-    img: 'cat-smoothie.svg',
-    items: [
-      ['سموزي مانجو', 65], ['سموزي فراولة', 60], ['سموزي ليمون', 50], ['سموزي ليمون نعناع', 55],
-      ['سموزي بطيخ', 60], ['سموزي كيوي', 80], ['سموزي بلوبيري', 70], ['سموزي ميكس بيري', 70],
-      ['سموزي باشون فروت', 70], ['سموزي بينا بول', 80], ['سموزي خوخ', 70], ['سموزي بطيخ نعناع', 65],
-      ['سموزي بيري شيري', 80], ['البوم أفوكادو', 120, 'أفوكادو، كيوي، جريب فروت'],
-      ['٦ بور أفوكادو', 135, 'أفوكادو وريد بول'], ['إيكا الخميس', 140, 'أفوكادو، كيوي، موز، ريد بول'],
-      ['٦× باور', 120, 'أفوكادو، كيوي، موز، بلح'], ['إيكا كوكتيل', 90, 'كيوي، موز، تفاح، مانجو، فراولة'],
-      ['فروت سلاد', 90, 'مانجو، موز، تفاح، فراولة'], ['فخفخينا', 85, 'أناناس، موز، كيوي، مانجو'],
-      ['فلوريد فول', 70], ['مانجو كيوي', 85], ['مانجو خوخ', 85], ['كيوي ليمون نعناع', 85],
-      ['موسكو', 85, 'موز، مانجو، باشون'], ['مالديف', 85, 'كيوي، فراولة، جوز هند']
-    ]
-  },
-  {
-    name: 'المأكولات - قريباً',
-    sub: 'Food - Coming Soon',
-    isComingSoon: true,
-    items: [
-      ['تشكيلة الساندوتشات والوجبات الخفيفة', 'قريباً', 'سيتم إطلاق قائمة أكلات ومأكولات مميزة قريباً']
-    ]
-  },
-  {
-    name: 'الشيشة',
-    sub: 'Shisha Selection',
-    items: [
-      ['شيشة تفاحتين', 70, 'فاخر'], ['شيشة عنب نعناع', 75, 'مميز'],
-      ['شيشة بلوبيري', 75, 'منعش'], ['شيشة فواكه ميكس', 80, 'خلطة خاصة'],
-      ['شيشة كلاسيك', 65], ['شيشة فاخرة / ميكس', 85]
-    ]
-  }
+ {name:'قهوة ساخنة',sub:'Hot Coffee & Hot Espresso',img:'cat-hotcoffee.svg',items:[['قهوة تركي',30,'سنجل'],['قهوة تركي',40,'دبل'],['قهوة اسبشيل',40,'سنجل'],['قهوة اسبشيل',50,'دبل'],['قهوة فرنساوي',50],['قهوة بندق',55],['قهوة نوتيلا',60],['إسبريسو',35,'سنجل'],['إسبريسو',45,'دبل'],['ريستريتو',35,'سنجل'],['ريستريتو',45,'دبل'],['ميكاتو',40,'سنجل'],['ميكاتو',50,'دبل'],['أفوكاتو',40,'سنجل'],['أفوكاتو',50,'دبل'],['كون بانا',40],['كورتادو',50,'كلاسيك أو موكا'],['كابتشينو',75],['لاتيه',65],['فلات وايت',60],['أمريكانو',50,'كلاسيك أو بلاك'],['نسكافيه',55,'كلاسيك أو بلاك'],['هوت شوكليت',70,'دارك أو وايت'],['هوت شوكليت مارشميلو',80],['هوت موكا',60,'دارك أو وايت']]},
+ {name:'فرابيه وآيس كوفي',sub:'قهوة باردة ومشروبات مثلجة',img:'cat-frappuccino.svg',items:[['فرابيه كراميل',85],['فرابتشينو كلاسيك',75],['فرابيه موكاتشينو',85],['فرابيه لوتس ستروبري',85],['فانيلا فرابتشينو',70],['فرابيه بستشيو',100],['آيس موكا',80,'وايت أو دارك'],['آيس أمريكان',55],['آيس كوفي',65],['آيس كراميل ميكاتو',80],['آيس سبينش لاتيه',80],['آيس ماتش لاتيه',90],['ستروبري ماتش لاتيه',95],['ماتش بستشيو',110],['إيكا آيس كوفي',85],['آيس نيكتو أرش',75]]},
+ {name:'موهيتو فيزي',sub:'موهيتو وبوبا',img:'cat-mojito.svg',items:[['موهيتو كلاسيك',65],['موهيتو فراولة، خوخ، كيوي',70],['موهيتو بلوبيري، باشون فروت',70],['موهيتو أمري باشون',70],['موهيتو شيري بيري',70],['موهيتو ريد بول',85],['هامر ريد بول',95],['بوبا ستروبري',70],['بوبا بلوبيري',70],['بوبا باشون فروت',70],['بوبا كولا',70],['بوبا تفاح أخضر',70],['ميلك تشيك بوبا',85,'ستروبري، بلوبيري، باشون فروت']]},
+ {name:'عصائر فريش',sub:'عصائر طازجة',img:'cat-juice.svg',items:[['مانجو فريش',65],['جوافة فريش',55],['فراولة فريش',60],['برتقال فريش',60],['موز باللبن',50],['جوافة باللبن',60],['فراولة باللبن',65],['بلح موز باللبن',65],['بلح باللبن',50],['ليمون فريش',40],['ليمون نعناع فريش',45],['برتقال بالجزر',60],['بطيخ فريش',60],['بطيخ نعناع فريش',65],['جوافة نعناع فريش',65],['أناناس فريش',70],['كيوي فريش',80],['أفوكادو فريش',90]]},
+ {name:'زبادي وميلك شيك',sub:'نكهات كريمية باردة',img:'cat-milkshake.svg',items:[['زبادي كلاسيك',60],['زبادي عسل',65],['زبادي فواكه',80],['زبادي',75,'مانجو، خوخ، فراولة، موز'],['زبادي',80,'بلوبيري أو باشون فروت'],['ميلك تشيك كلاسيك',75,'فانيلا، شوكولاتة، كراميل، مانجو، فراولة، كيوي'],['ميلك تشيك ميجا',80],['ميلك تشيك كونو شيبس',80],['ميلك تشيك',85,'أوريو، كيت كات، لوتس، نوتيلا، سنيكرز'],['ميلك تشيك بستشيو',95],['ميلك تشيز كيك',135,'شوكولاتة، كراميل، مانجو، فراولة']]},
+ {name:'مشروبات غازيه',sub:'آيس كريم ومشروبات غازية',img:'cat-icecream.svg',items:[['آيس كريم بول',30],['آيس كريم ٣ بول',60,'مانجو، فراولة، شوكليت'],['أوريو مادنس',85],['تشيز مادنس',115],['بيبسي',35],['سفن أب',35],['توست',35],['فيروز',40],['بيريل',40],['فيوري',35],['شويبس',35],['ميرندا',35,'تفاح أو برتقال'],['ريد بول',80],['مياه',10]]},
+ {name:'الشاي والأعشاب',sub:'مشروبات دافئة',img:'cat-tea.svg',items:[['شاي أحمر',20],['شاي أخضر',20],['شاي باللبن',30],['شاي أحمد تي',25],['شاي كرك',40],['شاي بالنكهات',30],['قرفة',25],['جنزبيل',25],['شاي زارده بارد',50],['ينسون ونعناع وكركديه وليمون',20],['هوت سيدر',45],['كوكتيل أعشاب صيدلية',50],['هوت سحلب مكسرات',60],['هوت سحلب فاكهة',80],['قرفة باللبن',45],['شاي أحمر نعناع',25]]},
+ {name:'سموزي وكوكتيل',sub:'سموزي ومكس فريش',img:'cat-smoothie.svg',items:[['سموزي مانجو',65],['سموزي فراولة',60],['سموزي ليمون',50],['سموزي ليمون نعناع',55],['سموزي بطيخ',60],['سموزي كيوي',80],['سموزي بلوبيري',70],['سموزي ميكس بيري',70],['سموزي باشون فروت',70],['سموزي بينا بول',80],['سموزي خوخ',70],['سموزي بطيخ نعناع',65],['سموزي بيري شيري',80],['البوم أفوكادو',120,'أفوكادو، كيوي، جريب فروت'],['٦ بور أفوكادو',135,'أفوكادو وريد بول'],['إيكا الخميس',140,'أفوكادو، كيوي، موز، ريد بول'],['٦× باور',120,'أفوكادو، كيوي، موز، بلح'],['إيكا كوكتيل',90,'كيوي، موز، تفاح، مانجو، فراولة'],['فروت سلاد',90,'مانجو، موز، تفاح، فراولة'],['فخفخينا',85,'أناناس، موز، كيوي، مانجو'],['فلوريد فول',70],['مانجو كيوي',85],['مانجو خوخ',85],['كيوي ليمون نعناع',85],['موسكو',85,'موز، مانجو، باشون'],['مالديف',85,'كيوي، فراولة، جوز هند']]}
 ];
-
-// حالة السلايدر الحالية
-let currentIndex = 0;
 
 // دالة حماية النصوص من هجمات XSS
 const escapeHtml = str => String(str ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
@@ -157,18 +27,6 @@ const escapeHtml = str => String(str ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp
 function normalizeDigits(str) {
   const arabicDigits = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
   return String(str ?? '').replace(/[٠-٩]/g, d => arabicDigits.indexOf(d));
-}
-
-// دالة ترتيب الأقسام حسب الأولوية
-function sortCategories(catList) {
-  if (!Array.isArray(catList)) return catList;
-  return catList.slice().sort((a, b) => {
-    const idxA = CATEGORY_PRIORITY.findIndex(p => a.name && a.name.includes(p.replace(' - قريباً', '')));
-    const idxB = CATEGORY_PRIORITY.findIndex(p => b.name && b.name.includes(p.replace(' - قريباً', '')));
-    const posA = idxA !== -1 ? idxA : 99;
-    const posB = idxB !== -1 ? idxB : 99;
-    return posA - posB;
-  });
 }
 
 // تحليل CSV من Google Sheets
@@ -238,7 +96,7 @@ function transformSheetData(flatData) {
   if (!Array.isArray(flatData) || flatData.length === 0) return null;
 
   if (flatData[0].items && flatData[0].name) {
-    return sortCategories(flatData);
+    return flatData;
   }
 
   const map = new Map();
@@ -261,35 +119,30 @@ function transformSheetData(flatData) {
   });
 
   const result = Array.from(map.values());
-  return result.length > 0 ? sortCategories(result) : null;
+  return result.length > 0 ? result : null;
 }
 
-// 1. تحميل الذاكرة المحلية أولاً لفتح الموقع فوراً
+// 1. تحميل الذاكرة المحلية أولاً لفتح الموقع فوراً في 0 ميلي ثانية بدون أي تأخير
 function initMenu() {
   try {
     const cached = localStorage.getItem('tamr_henna_menu_cache');
     if (cached) {
       const parsed = JSON.parse(cached);
       if (Array.isArray(parsed) && parsed.length > 0) {
-        categories = sortCategories(parsed);
+        categories = parsed;
       }
     }
   } catch (e) {}
 
+  // رسم المنيو فوراً بدون انتظار الشبكة
   renderAll();
   renderCatNav();
-  renderDots();
-  setupControls();
-  setupSwipeGestures();
-
-  // ضبط الارتفاع المبدئي
-  goToSection(0);
 
   // جلب التحديثات الجديدة من Google Sheets في الخلفية
   syncMenuFromSheets();
 }
 
-// 2. تحديث المنيو في الخلفية عند تغير الشيت
+// 2. تحديث المنيو في الخلفية بسلاسة عند تغير الشيت
 async function syncMenuFromSheets() {
   try {
     let rawData = null;
@@ -302,7 +155,7 @@ async function syncMenuFromSheets() {
       const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(GOOGLE_SHEET_NAME)}&_t=${Date.now()}`;
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 4000);
+      const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 seconds max
 
       const response = await fetch(csvUrl, { cache: 'no-store', signal: controller.signal });
       clearTimeout(timeoutId);
@@ -325,8 +178,6 @@ async function syncMenuFromSheets() {
         } catch (e) {}
         renderAll();
         renderCatNav();
-        renderDots();
-        goToSection(currentIndex);
       }
     }
   } catch (error) {
@@ -334,219 +185,125 @@ async function syncMenuFromSheets() {
   }
 }
 
+// متغير حفظ مرصد التمرير IntersectionObserver
+let catNavObserver = null;
+
 // بناء شريط التنقل العلوي للأقسام
 function renderCatNav() {
   const nav = document.getElementById('cat-nav');
   if (!nav) return;
 
+  if (catNavObserver) {
+    catNavObserver.disconnect();
+    catNavObserver = null;
+  }
+
   nav.innerHTML = categories.map((c, i) =>
-    `<button class="cat-btn${i === currentIndex ? ' active' : ''}" data-cat="${i}">${escapeHtml(c.name)}</button>`
+    `<button class="cat-btn${i === 0 ? ' active' : ''}" data-cat="${i}">${escapeHtml(c.name)}</button>`
   ).join('');
 
   nav.onclick = e => {
     const btn = e.target.closest('.cat-btn');
     if (!btn) return;
     const idx = +btn.dataset.cat;
-    goToSection(idx);
+    nav.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const target = document.getElementById(`cat-${idx}`);
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
   };
+
+  const sections = categories.map((_, i) => document.getElementById(`cat-${i}`));
+  catNavObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        const idx = id.replace('cat-', '');
+        nav.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+        const activeBtn = nav.querySelector(`[data-cat="${idx}"]`);
+        if (activeBtn) {
+          activeBtn.classList.add('active');
+          activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px', threshold: 0 });
+
+  sections.forEach(s => s && catNavObserver.observe(s));
 }
 
-// بناء نقاط المؤشر السفلي
-function renderDots() {
-  const dotsContainer = document.getElementById('dot-indicators');
-  if (!dotsContainer) return;
-
-  dotsContainer.innerHTML = categories.map((_, i) =>
-    `<span class="dot${i === currentIndex ? ' active' : ''}" data-dot="${i}"></span>`
-  ).join('');
-
-  dotsContainer.onclick = e => {
-    const dot = e.target.closest('.dot');
-    if (!dot) return;
-    goToSection(+dot.dataset.dot);
-  };
-}
-
-// بناء HTML لقسم واحد في السلايدر
-function renderCategorySlide(c, i) {
-  const imgs = sideImagesMap[i % sideImagesMap.length] || ['1.webp'];
-  const isComingSoon = c.isComingSoon || (c.name && c.name.includes('قريباً'));
-
+// بناء HTML لقسم واحد
+function renderCategoryHtml(c, globalI) {
   return `
-  <div class="category-slide${i === currentIndex ? ' active-slide' : ''}" id="slide-${i}" data-index="${i}">
-    <div class="menu-layout">
-      <div class="col-content">
-        <div class="menu-category" id="cat-${i}">
-          <div class="cat-header">
-            <h2>${escapeHtml(c.name)}</h2>
-            ${!isComingSoon ? '<span class="egp-label">ج.م</span>' : ''}
-          </div>
-          ${c.sub ? `<div class="cat-sub">${escapeHtml(c.sub)}</div>` : ''}
-          <div class="cat-body">
-            ${isComingSoon ? `
-              <div class="coming-soon-card">
-                <div class="cs-icon">⏳</div>
-                <h3>قريباً جداً</h3>
-                <p>نعمل حالياً على إعداد قائمة مأكولات وأكلات مميزة لخدمتكم قريباً!</p>
-              </div>
-            ` : `
-              <div class="items-col">
-                ${c.items.map((x, j) => `
-                  <div class="drink-row" style="animation-delay:${j * 0.02}s">
-                    <div class="drink-name">${escapeHtml(x[0])}${x[2] ? `<small class="drink-note">${escapeHtml(x[2])}</small>` : ''}</div>
-                    <span class="dots"></span>
-                    <b class="price">${typeof x[1] === 'number' ? Number(x[1]).toLocaleString('ar-EG') : escapeHtml(x[1])}</b>
-                  </div>`).join('')}
-              </div>
-            `}
-          </div>
-        </div>
-      </div>
-      <div class="col-images">
-        ${imgs.map(imgName => `<img src="media/${imgName}" class="side-img" alt="${escapeHtml(c.name)}" loading="lazy">`).join('')}
+  <div class="menu-category" id="cat-${globalI}" style="animation-delay:${globalI * 0.04}s">
+    <div class="cat-header">
+      <h2>${escapeHtml(c.name)}</h2>
+      <span class="egp-label">ج.م</span>
+    </div>
+    <div class="cat-body">
+      <div class="items-col">
+        ${c.items.map((x, j) => `
+          <div class="drink-row" style="animation-delay:${globalI * 0.04 + j * 0.025}s">
+            <div class="drink-name">${escapeHtml(x[0])}${x[2] ? `<small class="drink-note">${escapeHtml(x[2])}</small>` : ''}</div>
+            <span class="dots"></span>
+            <b class="price">${Number(x[1]).toLocaleString('ar-EG')}</b>
+          </div>`).join('')}
       </div>
     </div>
   </div>`;
 }
 
-// عرض جميع الأقسام في السلايدر الأفقي
+// عرض جميع الأقسام على صفحتين بتنسيق متناسق
 function renderAll() {
-  const track = document.getElementById('slider-track');
-  if (!track) return;
+  const halfLength = Math.ceil(categories.length / 2);
+  const p1 = categories.slice(0, halfLength);
+  const p2 = categories.slice(halfLength);
 
-  track.innerHTML = categories.map((c, i) => renderCategorySlide(c, i)).join('');
+  const page1 = document.getElementById('page-1');
+  const page2 = document.getElementById('page-2');
+  if (!page1 || !page2) return;
+
+  page1.innerHTML = `
+    <div class="page-logo">
+      <img src="media/main-logo.webp" alt="Tamr Henna Café">
+    </div>
+    <div class="menu-layout">
+      <div class="col-content">
+        ${p1.map((c, i) => renderCategoryHtml(c, i)).join('')}
+      </div>
+      <div class="col-images">
+        <img src="media/1.webp" class="side-img" alt="صورة 1" loading="lazy">
+        <img src="media/2.webp" class="side-img" alt="صورة 2" loading="lazy">
+        <img src="media/3.webp" class="side-img" alt="صورة 3" loading="lazy">
+        <img src="media/4.webp" class="side-img" alt="صورة 4" loading="lazy">
+        <img src="media/5.webp" class="side-img" alt="صورة 5" style="margin-top: 30px;" loading="lazy">
+        <img src="media/6.webp" class="side-img" alt="صورة 6" loading="lazy">
+        <img src="media/7.webp" class="side-img" alt="صورة 7" loading="lazy">
+        <img src="media/8.webp" class="side-img" alt="صورة 8" style="margin-top: 30px;" loading="lazy">
+        <img src="media/9.webp" class="side-img" alt="صورة 9" loading="lazy">
+        <img src="media/10.webp" class="side-img" alt="صورة 10" style="margin-top: 30px;" loading="lazy">
+      </div>
+    </div>`;
+
+  page2.innerHTML = `
+    <div class="menu-layout">
+      <div class="col-content">
+        ${p2.map((c, i) => renderCategoryHtml(c, halfLength + i)).join('')}
+      </div>
+      <div class="col-images">
+        <img src="media/11.webp" class="side-img" alt="صورة 11" loading="lazy">
+        <img src="media/12.webp" class="side-img" alt="صورة 12" loading="lazy">
+        <img src="media/13.webp" class="side-img" alt="صورة 13" style="margin-top: 30px;" loading="lazy">
+        <img src="media/14.webp" class="side-img" alt="صورة 14" loading="lazy">
+        <img src="media/15.webp" class="side-img" alt="صورة 15" style="margin-top: 30px;" loading="lazy">
+        <img src="media/16.webp" class="side-img" alt="صورة 16" loading="lazy">
+        <img src="media/17.webp" class="side-img" alt="صورة 17" loading="lazy">
+        <img src="media/18.webp" class="side-img" alt="صورة 18" loading="lazy">
+        <img src="media/1.webp" class="side-img" alt="صورة 18" loading="lazy">
+        <img src="media/2.webp" class="side-img" alt="صورة 18" loading="lazy">
+        
+      </div>
+    </div>`;
 }
 
-// الانتقال إلى قسم محدد
-function goToSection(index) {
-  if (!categories || categories.length === 0) return;
-
-  // تقييد المؤشر داخل الحدود
-  if (index < 0) index = 0;
-  if (index >= categories.length) index = categories.length - 1;
-
-  currentIndex = index;
-
-  const track = document.getElementById('slider-track');
-  if (track) {
-    // في RTL: تحريك التراك أفقيًا برفع الإزاحة موجبًا بحسب العرض
-    track.style.transform = `translateX(${currentIndex * 100}%)`;
-  }
-
-  // تحديث أزرار التنقل العلوي
-  const nav = document.getElementById('cat-nav');
-  if (nav) {
-    nav.querySelectorAll('.cat-btn').forEach((btn, i) => {
-      const isActive = i === currentIndex;
-      btn.classList.toggle('active', isActive);
-      if (isActive) {
-        btn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
-    });
-  }
-
-  // تحديث المؤشرات النقطية
-  const dots = document.getElementById('dot-indicators');
-  if (dots) {
-    dots.querySelectorAll('.dot').forEach((dot, i) => {
-      dot.classList.toggle('active', i === currentIndex);
-    });
-  }
-
-  // تحديث حالة أسهم التنقل
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-  if (prevBtn) prevBtn.disabled = currentIndex === 0;
-  if (nextBtn) nextBtn.disabled = currentIndex === categories.length - 1;
-
-  // تحديث حالة السلايدات
-  document.querySelectorAll('.category-slide').forEach((slide, i) => {
-    slide.classList.toggle('active-slide', i === currentIndex);
-  });
-
-  // ملاءمة ارتفاع الصفحة مع القسم النشط فوراً
-  adjustHeight();
-}
-
-// ضبط ارتفاع الصفحة ليناسب نهاية القسم الحالي بالضبط
-function adjustHeight() {
-  const viewport = document.getElementById('slider-viewport');
-  const activeSlide = document.getElementById(`slide-${currentIndex}`);
-  if (viewport && activeSlide) {
-    const height = activeSlide.offsetHeight;
-    if (height > 0) {
-      viewport.style.height = `${height}px`;
-    }
-  }
-}
-
-// إعداد أزرار الأسهم
-function setupControls() {
-  const prevBtn = document.getElementById('prev-btn');
-  const nextBtn = document.getElementById('next-btn');
-
-  if (prevBtn) {
-    prevBtn.onclick = () => goToSection(currentIndex - 1);
-  }
-  if (nextBtn) {
-    nextBtn.onclick = () => goToSection(currentIndex + 1);
-  }
-
-  // دعم أزرار الكيبورد (الأسهم)
-  window.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight') {
-      goToSection(currentIndex + 1);
-    } else if (e.key === 'ArrowLeft') {
-      goToSection(currentIndex - 1);
-    }
-  });
-
-  // ضبط الارتفاع عند إعادة تغيير حجم الشاشة
-  window.addEventListener('resize', adjustHeight);
-}
-
-// إعداد التمرير باللمس (السحب يميناً ويساراً)
-function setupSwipeGestures() {
-  const viewport = document.getElementById('slider-viewport');
-  if (!viewport) return;
-
-  let startX = 0;
-  let startY = 0;
-  let distX = 0;
-  let distY = 0;
-  let isSwiping = false;
-
-  viewport.addEventListener('touchstart', e => {
-    const touch = e.touches[0];
-    startX = touch.clientX;
-    startY = touch.clientY;
-    distX = 0;
-    distY = 0;
-    isSwiping = true;
-  }, { passive: true });
-
-  viewport.addEventListener('touchmove', e => {
-    if (!isSwiping) return;
-    const touch = e.touches[0];
-    distX = touch.clientX - startX;
-    distY = touch.clientY - startY;
-  }, { passive: true });
-
-  viewport.addEventListener('touchend', () => {
-    if (!isSwiping) return;
-    isSwiping = false;
-    // حد التمرير الأفقي الأدنى (35 بكسل)
-    if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > 35) {
-      if (distX > 0) {
-        // السحب يميناً -> الانتقال للقسم التالي
-        goToSection(currentIndex + 1);
-      } else {
-        // السحب يساراً -> الانتقال للقسم السابق
-        goToSection(currentIndex - 1);
-      }
-    }
-  });
-}
-
-// تشغيل المنيو فوراً عند الفتح
+// تشغيل المنيو فوراً عند فتح الصفحة
 initMenu();
