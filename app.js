@@ -305,6 +305,7 @@ function renderAll() {
         <img src="media/8.webp" class="side-img" alt="صورة 8" style="margin-top: 30px;" loading="lazy">
         <img src="media/9.webp" class="side-img" alt="صورة 9" loading="lazy">
         <img src="media/10.webp" class="side-img" alt="صورة 10" style="margin-top: 30px;" loading="lazy">
+         <img src="media/11.webp" class="side-img" alt="صورة 10" style="margin-top: 30px;" loading="lazy">
       </div>
     </div>`;
 
@@ -314,16 +315,16 @@ function renderAll() {
         ${p2.map((c, i) => renderCategoryHtml(c, halfLength + i)).join('')}
       </div>
       <div class="col-images">
-        <img src="media/11.webp" class="side-img" alt="صورة 11" loading="lazy">
-        <img src="media/12.webp" class="side-img" alt="صورة 12" loading="lazy">
-        <img src="media/13.webp" class="side-img" alt="صورة 13" style="margin-top: 30px;" loading="lazy">
-        <img src="media/14.webp" class="side-img" alt="صورة 14" loading="lazy">
-        <img src="media/15.webp" class="side-img" alt="صورة 15" style="margin-top: 30px;" loading="lazy">
-        <img src="media/16.webp" class="side-img" alt="صورة 16" loading="lazy">
-        <img src="media/17.webp" class="side-img" alt="صورة 17" loading="lazy">
-        <img src="media/18.webp" class="side-img" alt="صورة 18" loading="lazy">
-        <img src="media/1.webp" class="side-img" alt="صورة 18" loading="lazy">
-        <img src="media/2.webp" class="side-img" alt="صورة 18" loading="lazy">
+        <img src="media/12.webp" class="side-img" alt="صورة 11" loading="lazy">
+        <img src="media/13.webp" class="side-img" alt="صورة 12" loading="lazy">
+        <img src="media/14.webp" class="side-img" alt="صورة 13" style="margin-top: 30px;" loading="lazy">
+        <img src="media/15.webp" class="side-img" alt="صورة 14" loading="lazy">
+        <img src="media/16.webp" class="side-img" alt="صورة 15" style="margin-top: 30px;" loading="lazy">
+        <img src="media/17.webp" class="side-img" alt="صورة 16" loading="lazy">
+        <img src="media/18.webp" class="side-img" alt="صورة 17" loading="lazy">
+        <img src="media/19.webp" class="side-img" alt="صورة 18" loading="lazy">
+        <img src="media/20.webp" class="side-img" alt="صورة 18" loading="lazy">
+        <img src="media/21.webp" class="side-img" alt="صورة 18" loading="lazy">
         
       </div>
     </div>`;
