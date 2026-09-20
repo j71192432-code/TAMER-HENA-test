@@ -306,6 +306,7 @@ function renderAll() {
         <img src="media/9.webp" class="side-img" alt="صورة 9" loading="lazy">
         <img src="media/10.webp" class="side-img" alt="صورة 10" style="margin-top: 30px;" loading="lazy">
          <img src="media/11.webp" class="side-img" alt="صورة 10" style="margin-top: 30px;" loading="lazy">
+         <img src="media/22.webp" class="side-img" alt="صورة 10" style="margin-top: 30px;" loading="lazy">
       </div>
     </div>`;
 
